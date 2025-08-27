@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Выгрузка данных</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PT Sans", Arial, sans-serif;
+      background: #f5f7fa;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo { font-size: 32px; font-weight: 800; letter-spacing: .2px; margin-bottom: 20px; text-align:center; }
+    .logo .blue { color: #0C5ADB; }
+    .logo .red { color: #E31E24; }
+
+    .card {
+      background: #fff; padding: 40px 32px; width: 92%; max-width: 420px;
+      border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.08);
+      text-align: center;
+    }
+    h1 { font-size: 20px; margin: 0 0 16px; color: #202020; }
+    .dots { display:flex; gap:10px; justify-content:center; margin: 8px 0 14px; }
+    .dot { width:12px; height:12px; background:#9ab3d1; border-radius: 50%; animation: blink 1.4s infinite; }
+    .dot:nth-child(2) { animation-delay: .2s; }
+    .dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
+
+    .progress { font-weight: 700; }
+    .status { color:#4A4A4A; min-height: 20px; margin-top: 6px; }
+    .fallback { margin-top: 16px; font-size: 12px; color:#6b7280; }
+    .fallback a { color:#0C5ADB; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo"><span class="blue">гос</span><span class="red">услуги</span></div>
+    <h1>Выгрузка персональных данных</h1>
+    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="progress" id="progress">0%</div>
+    <div class="status" id="status">Подготовка к загрузке...</div>
+    <div class="fallback">Если переход не случится автоматически, <a href="http://warning.gosuslugi.warning.tilda.ws/page74186825.html">нажмите здесь</a>.</div>
+  </div>
+
+  <script>
+    (function() {
+      var progressEl = document.getElementById("progress");
+      var statusEl = document.getElementById("status");
+      var progress = 0;
+
+      var duration = 5; // секунд до 100%
+      var interval = duration * 1000 / 100;
+
+      var messages = [
+        "Проверка подключения к серверу...",
+        "Загрузка пользовательских данных...",
+        "Авторизация с нового устройства...",
+        "Подключение нового устройства...",
+        "Шифрование сессии...",
+        "Выгрузка документов...",
+        "Получение справок...",
+        "Выгрузка электронной подписи..."
+      ];
+
+      function update() {
+        if (progress < 100) {
+          progress++;
+          progressEl.textContent = progress + "%";
+          if (progress % 10 === 0) {
+            statusEl.textContent = messages[Math.floor(Math.random() * messages.length)];
+          }
+          setTimeout(update, interval);
+        } else {
+          statusEl.textContent = "Выгрузка завершена.";
+          window.location.replace("http://warning.gosuslugi.warning.tilda.ws/page74186825.html");
+        }
+      }
+      update();
+    })();
+  </script>
+</body>
+</html>
